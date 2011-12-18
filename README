@@ -7,4 +7,21 @@
                            |_| 
 
 
-An entry for LD48 #22. -POLM
+An entry for LD48 #22. 
+
+Sound effects from sfxr. 
+
+Base library is enchant.js from Ubiquitous Entertainment, which I
+re-investigated thanks to the prompting of Kazuhiro Sera (@seratch). 
+
+Art, story, and code by polm23. 
+
+Match counting idea from some article about an old (Atari?) Eye of the Beholder
+game where the same method was used for counting arrows. 
+
+Maze generation heavily guided by Wikipedia article on same. 
+
+Idea of giant shrimp in darkness inspired by the light shining through the
+fronds of a palm tree on a stormy night as I was half asleep. 
+
+Idea of world destroyed by random meteorite based on true events. 
