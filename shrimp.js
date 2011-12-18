@@ -1,16 +1,17 @@
 //Major globals
-var levels = {1: {fill: 0.4, caption: "Once there was a boy."},
-		2: {fill: 0.4, caption: "His parents were scientists."},
-		3: {fill: 0.5, caption: "They worked on an important project."},
-		4: {fill: 0.5, caption: "A meteor fell from space."},
-		5: {fill: 0.5, caption: "The meteor contained a powerful energy."},
-		6: {fill: 0.6, caption: "It was taken to a lab."},
-		7: {fill: 0.6, caption: "Research progressed."},
-		8: {fill: 0.7, caption: "The boy went to visit his parents."},
-		9: {fill: 0.7, caption: "They were called away."},
-		10: {fill: 0.8, caption: "He was alone."},
-		11: {fill: 0.9, caption: "He wandered around."},
-		12: {fill: 0.2, caption: "He thought it would be nice to have a friend."}}
+var levels = {1: {fill: 0.4, matches: 0.07, caption: "Once there was a boy."},
+		2: {fill: 0.4, matches: 0.07, caption: "His parents were scientists."},
+		3: {fill: 0.5, matches: 0.06, caption: "They worked on an important project."},
+		4: {fill: 0.5, matches: 0.06, caption: "A meteor fell from space."},
+		5: {fill: 0.5, matches: 0.05, caption: "The meteor contained a powerful energy."},
+		6: {fill: 0.6, matches: 0.05, caption: "It was taken to a lab."},
+		7: {fill: 0.6, matches: 0.04, caption: "Research progressed."},
+		8: {fill: 0.7, matches: 0.04, caption: "The boy went to visit his parents."},
+		9: {fill: 0.7, matches: 0.04, caption: "They were called away."},
+		10: {fill: 0.8, matches: 0.03, caption: "He was alone."},
+		11: {fill: 0.9, matches: 0.02, caption: "He wandered around."},
+		12: {fill: 0.2, matches: 0.01, caption: "He thought it would be nice to have a friend."},
+		13: {fill: 0, matches: 0, caption: "The End. Thanks for playing!"}}
 
 
 //Helper functions
@@ -96,7 +97,7 @@ function maptrans(map){
 	for(i=0;i<map.length;i++){
 		for(j=0;j<map[0].length;j++){
 			if(map[i][j] === 1) {map[i][j] = 0; continue;}
-			if(map[i][j] === 0) {map[i][j] = 1; continue;}
+			if(map[i][j] === 0) {map[i][j] = Math.floor(Math.random() * 4) + 1; continue;}
 		}
 	}
 	return map;
@@ -126,7 +127,7 @@ window.onload = function () {
 	game.fps = 30;
 	game.scale = 2;
 	//Resources
-	game.preload("player.gif");
+	game.preload("boy.png");
 	game.preload("map.png");
 	game.preload("darkness.png");
 	game.preload("match.png");
@@ -143,8 +144,8 @@ window.onload = function () {
 		var player = new Sprite(16,16);
 		player.x = 0;
 		player.y = 0;
-		player.image = game.assets["player.gif"];
-		player.rotate(90);
+		player.facing = 0;
+		player.image = game.assets["boy.png"];
 
 		var darkness = new Array(4);
 		var i;
@@ -157,7 +158,7 @@ window.onload = function () {
 		var counter = 0;
 
 		//TODO decide on numbers...
-		player.matches = 5;
+		player.matches = 3;
 
 		player.addEventListener('enterframe', function(e){
 			if(paused){console.log("paused");return;}
@@ -165,10 +166,12 @@ window.onload = function () {
 			var x = player.x;
 			var y = player.y;
 			var ok = function(x,y) { return !map.hitTest(x,y);};
-			if(game.input.right && ok(x+14+2,y) && ok(x+14+2,y+14)){player.x += 2;}
-			if(game.input.left && ok(x-2,y) && ok(x-2,y+14)){player.x -= 2;}
-			if(game.input.up && ok(x,y-2) && ok(x+14,y-2)){player.y -= 2;}
-			if(game.input.down && ok(x,y+14+2) && ok(x+14,y+14+2)){player.y += 2;}
+			if(game.input.right && ok(x+14+2,y) && ok(x+14+2,y+14)){player.x += 2; player.facing = 1;}
+			if(game.input.left && ok(x-2,y) && ok(x-2,y+14)){player.x -= 2; player.facing = 3;}
+			if(game.input.up && ok(x,y-2) && ok(x+14,y-2)){player.y -= 2; player.facing = 2;}
+			if(game.input.down && ok(x,y+14+2) && ok(x+14,y+14+2)){player.y += 2; player.facing = 0;}
+			player.frame = (player.facing * 3) + (game.frame % 3);
+			
 
 			counter++;
 			if(counter===10){counter=0; margin--;}
@@ -242,17 +245,12 @@ window.onload = function () {
 			
 			//place player -  random player start location
 			//Always safe because of how the maze algo works
+			player.matches = 3;
 			player.x = (2 * 16 * Math.floor(Math.random() * mx)) + 16;
 			player.y = (2 * 16 * Math.floor(Math.random() * my)) + 16;
-			//place goal - put it far away from the player
-			//TODO
-			//place matches - common, but not too common
-			//TODO
-
-
 
 			scene.addChild(player);
-			addmatches(maze,0.03, scene);
+			addmatches(maze,levels[level].matches, scene);
 			scene.backgroundColor = "#f0f";
 			for(i=0;i<darkness.length;i++){scene.addChild(darkness[i]);}
 
@@ -266,7 +264,7 @@ window.onload = function () {
 			leveltext.countdown = 60;
 			leveltext.addEventListener('enterframe',function(e){
 				//This should only display for a few seconds
-				if(this.countdown===0) {paused = false; game.popScene();return;}
+				if(this.countdown===0 && level != 13) {paused = false; game.popScene();return;}
 				paused = true;
 				this.countdown--;
 			});
