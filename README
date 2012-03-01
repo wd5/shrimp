@@ -7,14 +7,19 @@
                            |_| 
 
 
-An entry for LD48 #22. 
+An entry for LD48 #22. It's rather broken and not really complete, but it is
+playable! 
 
-Sound effects from sfxr. 
+Push "Z" to use a match and "X" to count them, though I'm not sure counting
+works. You should hear a sound for each match. Your objective in each level is
+to get to the green portal before the darkness gets you. 
+
+Sound effects from bfxr. 
 
 Base library is enchant.js from Ubiquitous Entertainment, which I
 re-investigated thanks to the prompting of Kazuhiro Sera (@seratch). 
 
-Art, story, and code by polm23. 
+Art, story, and code by Paul O'Leary McCann (@polm23). 
 
 Match counting idea from some article about an old (Atari?) Eye of the Beholder
 game where the same method was used for counting arrows. 
@@ -24,4 +29,4 @@ Maze generation heavily guided by Wikipedia article on same.
 Idea of giant shrimp in darkness inspired by the light shining through the
 fronds of a palm tree on a stormy night as I was half asleep. 
 
-Idea of world destroyed by random meteorite based on true events. 
+Idea of world destroyed by random meteorite based on true events. -POLM
