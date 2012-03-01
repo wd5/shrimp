@@ -162,19 +162,23 @@ window.onload = function () {
 
 		player.addEventListener('enterframe', function(e){
 			if(paused){console.log("paused");return;}
+			if(game.frame % (30 * 5) === 0 && Math.random() < .33){
+				game.assets["shrimp.wav"].play();
+
+			}
 			//Input checks
 			var x = player.x;
 			var y = player.y;
 			var ok = function(x,y) { return !map.hitTest(x,y);};
-			if(game.input.right && ok(x+14+2,y) && ok(x+14+2,y+14)){player.x += 2; player.facing = 1;}
-			if(game.input.left && ok(x-2,y) && ok(x-2,y+14)){player.x -= 2; player.facing = 3;}
-			if(game.input.up && ok(x,y-2) && ok(x+14,y-2)){player.y -= 2; player.facing = 2;}
-			if(game.input.down && ok(x,y+14+2) && ok(x+14,y+14+2)){player.y += 2; player.facing = 0;}
+			if(game.input.right && ok(x+14+2,y+2) && ok(x+14+2,y+14)){player.x += 2; player.facing = 1;}
+			if(game.input.left && ok(x-2,y+2) && ok(x-2,y+14)){player.x -= 2; player.facing = 3;}
+			if(game.input.up && ok(x+2,y-2) && ok(x+14,y-2)){player.y -= 2; player.facing = 2;}
+			if(game.input.down && ok(x+2,y+14+2) && ok(x+14,y+14+2)){player.y += 2; player.facing = 0;}
 			player.frame = (player.facing * 3) + (game.frame % 3);
 			
 
 			counter++;
-			if(counter===10){counter=0; margin--;}
+			if(counter===10){counter=0; margin-=2;}
 			if(margin===8){
 				//TODO play a creepy noise
 				game.assets["death.wav"].play();
@@ -274,7 +278,7 @@ window.onload = function () {
 				this.y = (game.height / 2) - player.y;
 			});
 
-			margin = 16 * 6;
+			margin = 16 * 5;
 
 			game.popScene();
 			game.pushScene(scene);
@@ -289,8 +293,9 @@ window.onload = function () {
 			this.y = y * 16;
 			this.addEventListener('enterframe', function(e){
 				if(this.opacity != 0 && this.intersect(player)){
-					console.log("intersected!");
 					//TODO play noise
+					game.assets["matchpickup.wav"].play();
+
 					player.matches++;
 					this.opacity = 0;
 					game.rootScene.removeChild(this);
@@ -301,6 +306,7 @@ window.onload = function () {
 		}});
 
 		function addmatches(map, fill, scene){
+			fill = fill * 0.2;
 			var i,j;
 			for(i=0;i<map.length;i++){
 				for(j=0;j<map[0].length;j++){
